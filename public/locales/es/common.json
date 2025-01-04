@@ -1,0 +1,22 @@
+{
+    "title": "Morpheus - Desarrollando una web accesible",
+    "header": {
+      "logoAlt": "Morpheus",
+      "githubLink": "Acceder a GitHub"
+    },
+    "main": {
+      "welcome": "¡Bienvenido a nuestro sitio web accesible!",
+      "description": "Estamos comprometidos a crear experiencias web inclusivas para todos.",
+      "aboutMe": "Morpheus, mi nombre es Diego Miranda. Soy estudiante de Ingeniería de Software, especializado en tecnología de la información. Me gusta trabajar en proyectos de software y desarrollar nuevas tecnologías. Además, soy una persona creativa y motivada, que busca aprender y mejorar constantemente.",
+      "objective": "Mi principal objetivo en este trabajo es desarrollar soluciones web accesibles y agradables para personas con discapacidades. Para esto, he investigado y aplicado técnicas de accesibilidad, como las Pautas de Accesibilidad para el Contenido Web (WCAG) 2.1.",
+      "examples": "Aquí tienes algunos ejemplos de proyectos que he realizado en el ámbito de la accesibilidad web:",
+      "accessibilityTitle": "¿Qué es accesibilidad?"
+    },
+    "footer": {
+      "modalButton": "Abrir Modal",
+      "modalTitle": "Términos de Uso",
+      "modalDescription": "Estos son los términos de uso",
+      "closeModal": "Cerrar Modal"
+    }
+  }
+  
