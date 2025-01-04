@@ -1,23 +1,25 @@
 import { sql } from '@vercel/postgres';
 import bcrypt from 'bcrypt';
-import type { NextAuthConfig } from 'next-auth';
+import type { NextAuthOptions, User as NextAuthUser, Session } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import Credentials from 'next-auth/providers/credentials';
 import GitHub from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { z } from 'zod';
+
 
 async function getUser(email: string) {
   const user = await sql`SELECT * FROM users WHERE email=${email}`;
   return user.rows[0];
 }
 
-export const authConfig: NextAuthConfig = {
+export const authConfig: NextAuthOptions = {
   pages: {
     signIn: '/login',
   },
   callbacks: {
-    async session({ session, token }) {
-      session.user = token.user;
+    async session({ session, token }: { session: Session; token: JWT }) {
+      session.user = token.user as NextAuthUser;;
       return session;
     },
     async jwt({ token, user }) {
@@ -27,11 +29,15 @@ export const authConfig: NextAuthConfig = {
   },
   providers: [
     Credentials({
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
       async authorize(credentials) {
         const parsed = z
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials);
-
+    
         if (parsed.success) {
           const { email, password } = parsed.data;
           const user = await getUser(email);
@@ -41,10 +47,11 @@ export const authConfig: NextAuthConfig = {
         }
         return null;
       },
-    }),
+    })
+    ,
     GitHub({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
     GoogleProvider({
       clientId: process.env.AUTH_GOOGLE_ID!,

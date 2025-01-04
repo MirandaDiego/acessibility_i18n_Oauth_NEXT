@@ -1,11 +1,10 @@
 'use server';
 
-import { signIn } from "@/auth";
 import { sql } from "@vercel/postgres";
-import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { signIn } from "./../../../auth";
 
 
 const FormSchema = z.object({
@@ -62,7 +61,7 @@ export async function createInvoice(prevState: State,formData: FormData) {
         `;
       } catch (error) {
         return {
-          message: 'Database Error: Failed to Create Invoice.',
+          message: `Database Error: Failed to Create Invoice.${error}`,
         };
       }
     //Depois que o banco de dados for atualizado, o /dashboard/invoicescaminho será revalidado e novos dados serão buscados do servidor.
@@ -107,7 +106,7 @@ export async function updateInvoice( id:string, prevState: State, formData: Form
     WHERE id = ${id}
     `;}catch (error){
         return{
-            message: 'Databse Error: Failed Update Invoice'
+            message: `Databse Error: Failed Update Invoice ${error}`
         }
     }
 //revalidatePathpara limpar o cache do cliente e fazer uma nova solicitação ao servidor.
@@ -125,7 +124,7 @@ export async function deleteInvoice(id: string) {
     revalidatePath('/dashboard/invoices');
 }catch(error){
         return{
-            message: 'Database Error: Failed Delete Invoice'
+            message: `Database Error: Failed Delete Invoice ${error}`
         }
     }
 
@@ -137,17 +136,12 @@ export async function authenticate(
   formData: FormData,
 ) {
   try {
-    await signIn('credentials', formData);
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return 'Invalid credentials.';
-        default:
-          return 'Something went wrong.';
-      }
+    const result = await signIn('credentials', formData);
+    if (result?.error) {
+      return result.error;
     }
-    throw error;
+  } catch (error) {
+    console.error("Authentication Error:", error);
+    return 'Something went wrong.';
   }
 }
-
