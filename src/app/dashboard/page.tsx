@@ -5,7 +5,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import styles from '../app/styles/Home.module.css';
+import styles from '../../app/styles/Home.module.css';
 import LanguageSwitcher from "../components/toggleLinguages";
 import { axeAccessibilityReporter } from "../utils/axeAccessibilityReporter";
 
